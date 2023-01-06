@@ -5,8 +5,8 @@
 
 import { Signer } from '@taquito/taquito';
 import Transport from '@ledgerhq/hw-transport';
-import { b58cencode, prefix, Prefix, ProhibitedActionError } from '@taquito/utils';
-import { InvalidDerivationPathError } from '@taquito/core';
+import { b58cencode, prefix, Prefix } from '@taquito/utils';
+import { InvalidDerivationPathError, ProhibitedActionError } from '@taquito/core';
 import {
   appendWatermark,
   transformPathToBuffer,
@@ -31,7 +31,6 @@ export enum DerivationType {
   P256 = 0x02, // tz3
   BIP32_ED25519 = 0x03, // tz1 BIP32
 }
-
 
 export const HDPathTemplate = (account: number) => {
   return `44'/1729'/${account}'/0'`;
@@ -89,7 +88,9 @@ export class LedgerSigner implements Signer {
   ) {
     this.transport.setScrambleKey('XTZ');
     if (!path.startsWith("44'/1729'")) {
-      throw new InvalidDerivationPathError(`The derivation path ${path} is invalid. The derivation path must start with 44'/1729`);
+      throw new InvalidDerivationPathError(
+        `The derivation path ${path} is invalid. The derivation path must start with 44'/1729`
+      );
     }
     if (!Object.values(DerivationType).includes(derivationType)) {
       throw new InvalidDerivationTypeError(derivationType.toString());

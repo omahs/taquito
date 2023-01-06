@@ -17,13 +17,12 @@ import {
   WalletTransferParams,
 } from './interface';
 
+import { validateAddress, validateContractAddress, ValidationResult } from '@taquito/utils';
 import {
-  validateAddress,
-  validateContractAddress,
-  ValidationResult,
+  InvalidAddressError,
+  InvalidContractAddressError,
   InvalidOperationKindError,
-} from '@taquito/utils';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+} from '@taquito/core';
 
 export interface PKHOption {
   forceRefetch?: boolean;
@@ -214,7 +213,7 @@ export class Wallet {
    */
   originate<TWallet extends DefaultWalletType = DefaultWalletType>(
     params: WalletOriginateParams<ContractStorageType<TWallet>>
-  ): { send: () => Promise<OriginationWalletOperation<TWallet>>; } {
+  ): { send: () => Promise<OriginationWalletOperation<TWallet>> } {
     return this.walletCommand(async () => {
       const mappedParams = await this.walletProvider.mapOriginateParamsToWalletParams(() =>
         this.context.parser.prepareCodeOrigination({

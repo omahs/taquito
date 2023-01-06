@@ -37,13 +37,16 @@ import { ContractMethodObject } from '../contract/contract-methods/contract-meth
 import {
   validateAddress,
   validateKeyHash,
-  InvalidKeyHashError,
   ValidationResult,
-  InvalidOperationKindError,
   validateContractAddress,
 } from '@taquito/utils';
 import { EstimationProvider } from '../estimate/estimate-provider-interface';
-import { InvalidAddressError, InvalidContractAddressError } from '@taquito/core';
+import {
+  InvalidAddressError,
+  InvalidContractAddressError,
+  InvalidKeyHashError,
+  InvalidOperationKindError,
+} from '@taquito/core';
 
 export const BATCH_KINDS = [
   OpKind.ACTIVATION,
@@ -289,7 +292,7 @@ export class OperationBatch extends OperationEmitter {
    *
    * @param params Optionally specify the source of the operation
    */
-  async send(params?: { source?: string; }) {
+  async send(params?: { source?: string }) {
     const publicKeyHash = await this.signer.publicKeyHash();
     const publicKey = await this.signer.publicKey();
     const estimates = await this.estimator.batch(this.operations);
