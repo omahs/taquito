@@ -1,13 +1,22 @@
+import {
+  ParameterValidationError,
+  PermissionDeniedError,
+  UnsupportedAction,
+  ValidationError,
+} from './errors';
+
 /**
  *  @category Error
  *  @description Error that indicates an invalid address being passed or used (both contract and implicit)
  */
-export class InvalidAddressError extends Error {
+export class InvalidAddressError extends ParameterValidationError {
   public name = 'InvalidAddressError';
   constructor(public address: string, errorDetail?: string) {
-    super();
-    const baseMessage = `The address '${address}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
+    super(
+      errorDetail
+        ? `The address '${address}' is invalid. ${errorDetail}`
+        : `The address '${address}' is invalid.`
+    );
   }
 }
 
@@ -15,7 +24,7 @@ export class InvalidAddressError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid derivation path being passed or used
  */
-export class InvalidDerivationPathError extends Error {
+export class InvalidDerivationPathError extends ParameterValidationError {
   public name = 'InvalidDerivationPathError';
   constructor(public message: string) {
     super(message);
@@ -26,7 +35,7 @@ export class InvalidDerivationPathError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid hex string being passed or used
  */
-export class InvalidHexStringError extends Error {
+export class InvalidHexStringError extends ParameterValidationError {
   public name = 'InvalidHexStringError';
   constructor(public message: string) {
     super(message);
@@ -37,7 +46,7 @@ export class InvalidHexStringError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid contract address being passed or used
  */
-export class InvalidContractAddressError extends Error {
+export class InvalidContractAddressError extends ParameterValidationError {
   public name = 'InvalidContractAddressError';
   constructor(public contractAddress: string) {
     super(`The contract address '${contractAddress}' is invalid`);
@@ -48,7 +57,7 @@ export class InvalidContractAddressError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid block hash being passed or used
  */
-export class InvalidBlockHashError extends Error {
+export class InvalidBlockHashError extends ValidationError {
   public name = 'InvalidBlockHashError';
   constructor(public blockHash: string) {
     super(`The block hash '${blockHash}' is invalid`);
@@ -56,15 +65,28 @@ export class InvalidBlockHashError extends Error {
 }
 
 /**
- *  @category Error
-*  @description Error that indicates an invalid key being passed or used
+ *   InvalidHexStringError,
+ *   InvalidContractAddressError,
+ *   InvalidKeyError,
+ *   InvalidPublicKeyError,
+ *   InvalidKeyHashError,
+ *   InvalidOperationHashError,
+ *   InvalidOperationKindError,
+ *   DeprecationError,
+ *   ProhibitedActionError,
+ *   InvalidChainIdError,
+ *
+ * moved from taquito/utils
  */
-export class InvalidKeyError extends Error {
+
+/**
+ *  @category Error
+ *  @description Error that indicates an invalid key being passed or used
+ */
+export class InvalidKeyError extends ParameterValidationError {
   public name = 'InvalidKeyError';
   constructor(public key: string, public errorDetail?: string) {
-    super();
-    const baseMessage = `The key ${key} is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
+    super(errorDetail ? `The key ${key} is invalid. ${errorDetail}` : `The key ${key} is invalid.`);
   }
 }
 
@@ -72,12 +94,14 @@ export class InvalidKeyError extends Error {
  *  @category Error
  *  @description Error that indicates an Invalid Public Key being passed or used
  */
-export class InvalidPublicKeyError extends Error {
+export class InvalidPublicKeyError extends ParameterValidationError {
   public name = 'InvalidPublicKeyError';
   constructor(public publicKey: string, errorDetail?: string) {
-    super();
-    const baseMessage = `The public key '${publicKey}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
+    super(
+      errorDetail
+        ? `The public key '${publicKey}' is invalid. ${errorDetail}`
+        : `The public key '${publicKey}' is invalid.`
+    );
   }
 }
 
@@ -85,7 +109,7 @@ export class InvalidPublicKeyError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid chain id being passed or used
  */
-export class InvalidChainIdError extends Error {
+export class InvalidChainIdError extends ValidationError {
   public name = 'InvalidChainIdError';
   constructor(public chainId: string) {
     super(`The chain id '${chainId}' is invalid`);
@@ -96,7 +120,7 @@ export class InvalidChainIdError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid key hash being passed or used
  */
-export class InvalidKeyHashError extends Error {
+export class InvalidKeyHashError extends ParameterValidationError {
   public name = 'InvalidKeyHashError';
   constructor(public keyHash: string) {
     super(`The public key hash '${keyHash}' is invalid`);
@@ -107,7 +131,7 @@ export class InvalidKeyHashError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid operation hash being passed or used
  */
-export class InvalidOperationHashError extends Error {
+export class InvalidOperationHashError extends ValidationError {
   public name = 'InvalidOperationHashError';
   constructor(public operationHash: string) {
     super(`The operation hash '${operationHash}' is invalid`);
@@ -118,7 +142,7 @@ export class InvalidOperationHashError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid operation kind being passed or used
  */
-export class InvalidOperationKindError extends Error {
+export class InvalidOperationKindError extends ParameterValidationError {
   public name = 'InvalidOperationKindError';
   constructor(public operationKind: string) {
     super(`The operation kind '${operationKind}' is unsupported`);
@@ -129,7 +153,7 @@ export class InvalidOperationKindError extends Error {
  *  @category Error
  *  @description General error that indicates something is no longer supported and/or deprecated
  */
-export class DeprecationError extends Error {
+export class DeprecationError extends UnsupportedAction {
   public name = 'DeprecationError';
   constructor(public message: string) {
     super(message);
@@ -140,7 +164,7 @@ export class DeprecationError extends Error {
  *  @category Error
  *  @description General error that indicates an action is prohibited or not allowed
  */
-export class ProhibitedActionError extends Error {
+export class ProhibitedActionError extends PermissionDeniedError {
   public name = 'ProhibitedActionError';
   constructor(public message: string) {
     super(message);

@@ -1,3 +1,5 @@
+import { ValidationError } from '@taquito/core';
+
 export {
   InvalidHexStringError,
   InvalidContractAddressError,
@@ -15,12 +17,14 @@ export {
  *  @category Error
  *  @description Error that indicates an invalid signature being passed or used
  */
-export class InvalidSignatureError extends Error {
+export class InvalidSignatureError extends ValidationError {
   public name = 'InvalidSignatureError';
   constructor(public signature: string, errorDetail?: string) {
-    super();
-    const baseMessage = `The signature '${signature}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
+    super(
+      errorDetail
+        ? `The signature '${signature}' is invalid. ${errorDetail}`
+        : `The signature '${signature}' is invalid.`
+    );
   }
 }
 
@@ -28,12 +32,14 @@ export class InvalidSignatureError extends Error {
  *  @category Error
  *  @description Error that indicates an invalid message being passed or used
  */
-export class InvalidMessageError extends Error {
+export class InvalidMessageError extends ValidationError {
   public name = 'InvalidMessageError';
   constructor(public msg: string, public errorDetail?: string) {
-    super();
-    const baseMessage = `The message '${msg}' is invalid.`;
-    this.message = errorDetail ? `${baseMessage} ${errorDetail}` : baseMessage;
+    super(
+      errorDetail
+        ? `The message '${msg}' is invalid. ${errorDetail}`
+        : `The message '${msg}' is invalid.`
+    );
   }
 }
 
@@ -42,7 +48,7 @@ export class InvalidMessageError extends Error {
  *  @category Error
  *  @description Error that indicates invalid protocol hash being passed or used
  */
-export class InvalidProtocolHashError extends Error {
+export class InvalidProtocolHashError extends ValidationError {
   public name = 'InvalidProtocolHashError';
   constructor(public protocolHash: string) {
     super(`The protocol hash '${protocolHash}' is invalid`);
@@ -53,7 +59,7 @@ export class InvalidProtocolHashError extends Error {
  *  @category Error
  *  @description General error that indicates a failure when trying to convert data from one type to another
  */
-export class ValueConversionError extends Error {
+export class ValueConversionError extends ValidationError {
   public name = 'ValueConversionError';
   constructor(public value: string, public desiredType: string) {
     super(`Unable to convert ${value} to a ${desiredType}`);
